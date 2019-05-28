@@ -10,7 +10,8 @@ class AppInner extends React.Component {
       <View style={styles.container}>
         <Text>Qiu</Text>
         <Text>Tarek</Text>
-        <Button title='Test' />
+        <Button onPress={this.props.actionCreator} title='Test' />
+        <Text>{this.props.content}</Text>
       </View>
     );
   }
@@ -19,13 +20,13 @@ class AppInner extends React.Component {
 export default class App extends React.Component{
   render(){
     return (
-      <AppInner />
+      <Provider store = {store}>
+        <ConnectedApp />
+      </Provider>
     )
     
   }
 }
-
-
 
 const styles = StyleSheet.create({
   container: {
@@ -35,3 +36,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+//functions that inject action creator and state to inner app props
+const mapStateToProps = (state) =>{
+  return {
+    content: state.reducer.content || 'Empty right now'
+  }
+}
+
+const mapDispatchToProps = (dispatch) =>{
+  return {
+    actionCreator : () =>{
+      dispatch(actionCreator())
+    }
+  }
+}
+//connection to store and innerapp
+const ConnectedApp = connect(mapStateToProps,mapDispatchToProps)(AppInner);
